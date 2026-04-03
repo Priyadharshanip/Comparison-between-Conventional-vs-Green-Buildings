@@ -11,8 +11,7 @@ import {
   Legend 
 } from 'recharts';
 
-const ComparisonGraph = ({ units, rate }) => {
-  const reduction = 0.3;
+const ComparisonGraph = ({ units, rate, reduction }) => {
   const greenUnits = units * (1 - reduction);
   
   const costConv = units * rate;

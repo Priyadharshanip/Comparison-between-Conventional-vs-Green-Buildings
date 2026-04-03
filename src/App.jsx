@@ -10,6 +10,15 @@ function App() {
   const [units, setUnits] = useState(1200);
   const [rate, setRate] = useState(8);
   const [isGreen, setIsGreen] = useState(false);
+  const [buildingMode, setBuildingMode] = useState('residential');
+
+  const reductionFactors = {
+    residential: 0.25,
+    commercial: 0.40,
+    industrial: 0.55
+  };
+
+  const currentReduction = reductionFactors[buildingMode];
 
   // Auto-calculate the transformation state based on interaction (optional)
   // For now, we use a manual toggle to demonstrate the "anti-gravity" feel
@@ -48,7 +57,7 @@ function App() {
               <div className="p-4 glass rounded-xl border border-slate-800 text-sm text-slate-300 leading-relaxed">
                 <strong className="text-brand-cyan uppercase tracking-wider block mb-1">What this simulator does:</strong>
                 This tool compares a standard building (High Impact) with a certified Green Building (Low Impact). 
-                It simulates a <strong>30% reduction</strong> in energy consumption to show how simple data inputs like usage and cost translate into massive environmental and financial gains.
+                It simulates a <strong>{(currentReduction * 100).toFixed(0)}% reduction</strong> in energy consumption to show how simple data inputs like usage and cost translate into massive environmental and financial gains.
               </div>
             </div>
           </div>
@@ -66,7 +75,7 @@ function App() {
               <ArrowUpRightIcon className={`w-5 h-5 transition-transform duration-500 ${isGreen ? 'rotate-[-45deg]' : ''}`} />
             </button>
             <p className="text-[10px] text-slate-500 font-mono tracking-tighter uppercase mr-4">
-              {isGreen ? 'Simulation Active: 30% Impact Reduction' : 'System Idle: High Carbon Density'}
+              {isGreen ? `Simulation Active: ${(currentReduction * 100).toFixed(0)}% Impact Reduction` : 'System Idle: High Carbon Density'}
             </p>
           </div>
         </header>
@@ -76,7 +85,14 @@ function App() {
           
           {/* Left Column: UI Controls */}
           <div className="lg:col-span-4 space-y-8 h-full">
-            <ControlPanel units={units} setUnits={setUnits} rate={rate} setRate={setRate} />
+            <ControlPanel 
+              units={units} 
+              setUnits={setUnits} 
+              rate={rate} 
+              setRate={setRate} 
+              buildingMode={buildingMode} 
+              setBuildingMode={setBuildingMode} 
+            />
             
             <div className="glass p-6 rounded-2xl border border-slate-800 space-y-4">
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">Operational Insights</h4>
@@ -90,7 +106,7 @@ function App() {
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-400">Carbon Weight</span>
                   <span className="font-mono text-brand-cyan">
-                    {isGreen ? 'Reduced (70%)' : 'Standard (100%)'}
+                    {isGreen ? `Reduced (${(100 - (currentReduction * 100)).toFixed(0)}%)` : 'Standard (100%)'}
                   </span>
                 </div>
               </div>
@@ -100,8 +116,8 @@ function App() {
           {/* Right Column: Visualization & Metrics */}
           <div className="lg:col-span-8 space-y-8">
             <GravityComparison isGreen={isGreen} />
-            <ImpactDashboard units={units} rate={rate} />
-            <ComparisonGraph units={units} rate={rate} />
+            <ImpactDashboard units={units} rate={rate} reduction={currentReduction} />
+            <ComparisonGraph units={units} rate={rate} reduction={currentReduction} />
           </div>
 
         </main>

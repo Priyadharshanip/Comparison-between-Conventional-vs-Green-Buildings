@@ -1,13 +1,36 @@
 import React from 'react';
 import { ZapIcon, IndianRupeeIcon } from 'lucide-react';
 
-const ControlPanel = ({ units, setUnits, rate, setRate }) => {
+const ControlPanel = ({ units, setUnits, rate, setRate, buildingMode, setBuildingMode }) => {
   return (
     <div className="glass p-8 rounded-2xl neon-border-cyan space-y-6">
-      <h2 className="text-2xl font-bold neon-text-cyan flex items-center gap-3">
-        <span className="p-2 glass rounded-lg"><ZapIcon className="w-6 h-6 text-brand-cyan" /></span>
-        Energy Control Unit
-      </h2>
+      <div className="flex justify-between items-start">
+        <h2 className="text-2xl font-bold neon-text-cyan flex items-center gap-3">
+          <span className="p-2 glass rounded-lg"><ZapIcon className="w-6 h-6 text-brand-cyan" /></span>
+          Energy Control Unit
+        </h2>
+      </div>
+
+      <div className="space-y-4">
+        <label className="block text-sm font-medium text-slate-400">
+          Building Category (Simulator Mode)
+        </label>
+        <div className="grid grid-cols-3 gap-2 p-1 bg-slate-900/50 rounded-xl border border-slate-800">
+          {['residential', 'commercial', 'industrial'].map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setBuildingMode(mode)}
+              className={`py-2 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                buildingMode === mode
+                  ? 'bg-brand-cyan text-slate-950 shadow-[0_0_15px_rgba(0,242,255,0.4)]'
+                  : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800'
+              }`}
+            >
+              {mode}
+            </button>
+          ))}
+        </div>
+      </div>
       
       <div className="space-y-4">
         <label className="block text-sm font-medium text-slate-400">

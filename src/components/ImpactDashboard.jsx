@@ -18,8 +18,7 @@ const MetricCard = ({ title, value, unit, icon: Icon, colorClass, highlightClass
   </div>
 );
 
-const ImpactDashboard = ({ units, rate }) => {
-  const reduction = 0.3; // 30% reduction for green building
+const ImpactDashboard = ({ units, rate, reduction }) => {
   const energySaved = units * reduction;
   const moneySavedMonthly = energySaved * rate;
   const moneySavedYearly = moneySavedMonthly * 12;
