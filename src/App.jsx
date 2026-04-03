@@ -116,7 +116,7 @@ function App() {
           {/* Right Column: Visualization & Metrics */}
           <div className="lg:col-span-8 space-y-8">
             <GravityComparison isGreen={isGreen} />
-            <ImpactDashboard units={units} rate={rate} reduction={currentReduction} />
+            <ImpactDashboard units={units} rate={rate} reduction={currentReduction} isGreen={isGreen} />
             <ComparisonGraph units={units} rate={rate} reduction={currentReduction} />
           </div>
 

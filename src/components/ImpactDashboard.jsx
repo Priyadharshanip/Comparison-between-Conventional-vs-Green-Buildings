@@ -18,44 +18,56 @@ const MetricCard = ({ title, value, unit, icon: Icon, colorClass, highlightClass
   </div>
 );
 
-const ImpactDashboard = ({ units, rate, reduction }) => {
+const ImpactDashboard = ({ units, rate, reduction, isGreen }) => {
+  // Potential Savings Calculations
   const energySaved = units * reduction;
   const moneySavedMonthly = energySaved * rate;
-  const moneySavedYearly = moneySavedMonthly * 12;
   const co2Reduction = energySaved * 0.85; // 0.85 kg CO2 per kWh
+
+  // Active Metrics Calculation (What the user CURRENTLY sees)
+  const activeUnits = isGreen ? (units * (1 - reduction)) : units;
+  const activeBill = activeUnits * rate;
+  const activeCO2 = activeUnits * 0.85;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Active Monthly Bill - Drops when Green */}
       <MetricCard 
-        title="Monthly Energy Saved"
-        value={energySaved.toFixed(0)}
-        unit="kWh / units"
-        icon={TrendingDownIcon}
-        colorClass="hover:neon-border-cyan transition-all"
-        highlightClass="text-brand-cyan"
-      />
-      <MetricCard 
-        title="Monthly Savings"
-        value={`₹${moneySavedMonthly.toLocaleString()}`}
-        unit="INR / month"
+        title="Active Monthly Bill"
+        value={`₹${activeBill.toLocaleString()}`}
+        unit="INR / Month"
         icon={WalletIcon}
-        colorClass="hover:neon-border-green transition-all"
-        highlightClass="text-brand-green"
+        colorClass={`transition-all duration-700 ${isGreen ? 'neon-border-green bg-brand-green/10' : 'hover:neon-border-cyan'}`}
+        highlightClass={isGreen ? 'text-brand-green' : 'text-slate-400'}
       />
+
+      {/* Active Carbon Footprint - Drops when Green */}
       <MetricCard 
-        title="Annual Savings"
-        value={`₹${moneySavedYearly.toLocaleString()}`}
-        unit="INR / year"
+        title="Active Carbon Footprint"
+        value={activeCO2.toFixed(1)}
+        unit="kg CO₂ / Month"
+        icon={TrendingDownIcon}
+        colorClass={`transition-all duration-700 ${isGreen ? 'neon-border-green bg-brand-green/10' : 'hover:neon-border-cyan'}`}
+        highlightClass={isGreen ? 'text-brand-green' : 'text-slate-400'}
+      />
+
+      {/* Monthly Savings - Static Potential */}
+      <MetricCard 
+        title="Est. Monthly Savings"
+        value={`₹${moneySavedMonthly.toLocaleString()}`}
+        unit="Potential INR"
         icon={IndianRupeeIcon}
-        colorClass="hover:neon-border-cyan transition-all shadow-lg"
+        colorClass="hover:neon-border-cyan opacity-80"
         highlightClass="text-brand-cyan"
       />
+
+      {/* CO2 Potential Reduction - Static Potential */}
       <MetricCard 
-        title="CO₂ Emissions Reduced"
+        title="Est. CO₂ Reduction"
         value={co2Reduction.toFixed(1)}
-        unit="kg / month"
+        unit="Potential kg"
         icon={TreeDeciduousIcon}
-        colorClass="hover:neon-border-green transition-all"
+        colorClass="hover:neon-border-green opacity-80"
         highlightClass="text-brand-green"
       />
     </div>
